@@ -1,0 +1,34 @@
+#refresh {
+    cursor: pointer;
+    border: solid 1px gray;
+    border-radius: 5px;
+    color: gray;
+    margin-bottom: 5px;
+    background-color: white;
+    font-size: 20px;
+}
+
+.container {
+    width: 500px;
+    margin: 0 auto;
+}
+
+td {
+    text-align: center;
+    color: gray;
+    vertical-align: middle;
+}
+
+#block td {
+    border: solid 1px gray;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 40px;
+    color: gray;
+    width: 55px;
+    height: 55px;
+}
+
+#block td:hover {
+    cursor: hand;
+}
