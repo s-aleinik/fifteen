@@ -6,7 +6,8 @@ var items = [],     // объявляем массив, в котором буд
     columns,        // объявляем переменную для обзего количества столбцов
     select,         // объявляем переменную для списка с размерами поля
     startTime,      // объявляем переменную время начала игры
-    timeout;        // объявляем переменную длительности анимации
+    timeout,        // объявляем переменную длительности анимации
+    gameIsOver;     // объявляем переменную проверки конца игры
 
 window.onload = function () {
     block = document.getElementById("block");                   // вносим в переменную контейнер для нашего поля
@@ -18,6 +19,11 @@ window.onload = function () {
 // функция для обработки для перемещения клетки
 
 function cellClick(event) {
+
+    if (gameIsOver) {                                       // проверяем закончена ли игра, если хакончана - запрещаем ходить
+        return
+    }
+
     var clickEvent = event || window.event,                  // отлавливаем событие клика по клетке
         el = clickEvent.srcElement || clickEvent.target,     // находим элемент, по которому был осуществлён клик
         ei = el.id.charAt(0),                                // получаем его положение в строке
@@ -78,7 +84,8 @@ function isWin(el, ei, ej) {
                 break;
             }
     if (isWin) {
-        setTimeout(showCongratsMessage, timeout * 10 + 1);     // если клетки на своих местах, выводим сообщение о победе
+        setTimeout(showCongratsMessage, timeout * 10 + 2);     // если клетки на своих местах, выводим сообщение о победе
+        gameIsOver = true;
     }
 }
 
@@ -153,7 +160,9 @@ function chooseFieldSize() {
 
 function newGame() {
 
-    var slider = document.getElementById("myRange");        // создаём переменную со ссылкой на элемент myRange
+    gameIsOver = false;                                     // начинаем новую игру
+
+    var slider = document.getElementById("duration");       // создаём переменную со ссылкой на элемент myRange
 
     timeout = slider.value;                                 // присваиваем дефолтное значение длительности анимации
 
@@ -180,10 +189,10 @@ function newGame() {
     emptyI = rows - 1;      // присваиваем переменной позиции пустой клетки в строках значение последней строки
     emptyJ = columns - 1;   // присваиваем переменной позиции пустой клетки в столбцах значение последнего столбца
 
-    // в цикле перемещаем значение пустой клетки 55555 раз
-    // такое большое число выбрано, чтобы для поля 10х10 клетки перемешивались более-менее корректно
+    // в цикле перемещаем значение пустой клетки 999999 раз
+    // такое большое число выбрано, чтобы для поля 10х10 клетки перемешивались корректно
 
-    for (i = 0; i < 55555; i++) {
+    for (i = 0; i < 999999; i++) {
         switch (Math.round(3 * Math.random())) {                    // выбираем случайное число от 0 до 3
             case 0:
                 if (emptyI != 0) {                                  // проверяем, не находится ли пустая клетка в верхней строке
@@ -224,7 +233,16 @@ function showCongratsMessage() {
     var finishTime = new Date();                                    // присваиваем переменной конца игры текущее время
     var seconds = ((finishTime - startTime) / 1000) % 60;           // получаем секунды
     var minutes = ((finishTime - startTime) / (1000 * 60)) % 60;    // получаем минуты
-    alert("Ура! Вы решили головоломку за " + (Math.trunc(minutes)) + ':' + (Math.trunc(seconds)) + "")
+
+    minutes = minutes.toString().slice(0, 2).replace('.', '');              // приводим минуты в нужный формат
+
+    if (seconds < 10) {
+        seconds = '0' + seconds.toString().slice(0, 2).replace('.', '');    // приводим секунды в нужный формат
+    } else {
+        seconds = seconds.toString().slice(0, 2).replace('.', '');
+    }
+
+    alert("Ура! Вы решили головоломку за " + (minutes) + ':' + (seconds) + "");
 }
 
 // функция для создания игрового поля(таблицы)
