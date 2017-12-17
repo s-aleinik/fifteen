@@ -27,30 +27,58 @@ function cellClick(event) {
 
     if ((ei == emptyI && Math.abs(ej - emptyJ) == 1) || (ej == emptyJ && Math.abs(ei - emptyI) == 1)) {
 
-        document.getElementById(emptyI + " " + emptyJ).classList.add('animated', 'tada');  // добавляем анимацию
-        el.classList.add('animated', 'tada');                                              // добавляем анимацию
+        if (emptyI - ei == 1) {
+            document.getElementById(emptyI + " " + emptyJ).classList.add('animated', 'zoomOutUp');          // добавляем анимацию
+            el.classList.add('animated', 'zoomOutDown');                                                    // добавляем анимацию
+            setTimeout(function () {
+                document.getElementById(emptyI + " " + emptyJ).classList.remove('animated', 'zoomOutUp');   // убираем анимацию
+                el.classList.remove('animated', 'zoomOutDown');                                             // убираем анимацию
+                isWin(el, ei, ej);                                                                          // проверяем условия победы
+            }, timeout * 10);
+        } else if (emptyI - ei == -1) {
+            document.getElementById(emptyI + " " + emptyJ).classList.add('animated', 'zoomOutDown');
+            el.classList.add('animated', 'zoomOutUp');
+            setTimeout(function () {
+                document.getElementById(emptyI + " " + emptyJ).classList.remove('animated', 'zoomOutDown');
+                el.classList.remove('animated', 'zoomOutUp');
+                isWin(el, ei, ej);
+            }, timeout * 10);
+        } else if (emptyJ - ej == 1) {
+            document.getElementById(emptyI + " " + emptyJ).classList.add('animated', 'zoomOutLeft');
+            el.classList.add('animated', 'zoomOutRight');
+            setTimeout(function () {
+                document.getElementById(emptyI + " " + emptyJ).classList.remove('animated', 'zoomOutLeft');
+                el.classList.remove('animated', 'zoomOutRight');
+                isWin(el, ei, ej);
+            }, timeout * 10);
+        } else {
+            document.getElementById(emptyI + " " + emptyJ).classList.add('animated', 'zoomOutRight');
+            el.classList.add('animated', 'zoomOutLeft');
+            setTimeout(function () {
+                document.getElementById(emptyI + " " + emptyJ).classList.remove('animated', 'zoomOutRight');
+                el.classList.remove('animated', 'zoomOutLeft');
+                isWin(el, ei, ej);
+            }, timeout * 10);
+        }
+    }
+}
 
-        setTimeout(function () {
-            document.getElementById(emptyI + " " + emptyJ).classList.remove('animated', 'tada');   // убираем анимацию
-            el.classList.remove('animated', 'tada');                                               // убираем анимацию
+// функция для проверки, не победил ли пользователь
 
-            document.getElementById(emptyI + " " + emptyJ).innerHTML = el.innerHTML;    // присваиваем обоим клеткам
-            el.innerHTML = "";                                                          // новое значение
-            emptyI = ei;                        // обновляем переменную позиции пустой клетки в строках
-            emptyJ = ej;                        // обновляем переменную позиции пустой клетки в столбцах
-            var isWin = true;                   // создаём переменную "победа ли?"
-            for (var i = 0; i < rows; i++)      // проверяем, на своих ли местах клетки
-                for (var j = 0; j < columns; j++)
-                    if (i + j != (rows + columns - 2) && document.getElementById(i + " " + j).innerHTML != i * columns + j + 1) {
-                        isWin = false;
-                        break;
-                    }
-            if (isWin) {
-                setTimeout(showCongratsMessage, timeout * 10 + 1);     // если клетки на своих местах, выводим сообщение о победе
+function isWin(el, ei, ej) {
+    document.getElementById(emptyI + " " + emptyJ).innerHTML = el.innerHTML;    // присваиваем обоим клеткам
+    el.innerHTML = "";                                                          // новое значение
+    emptyI = ei;                        // обновляем переменную позиции пустой клетки в строках
+    emptyJ = ej;                        // обновляем переменную позиции пустой клетки в столбцах
+    var isWin = true;                   // создаём переменную "победа ли?"
+    for (var i = 0; i < rows; i++)      // проверяем, на своих ли местах клетки
+        for (var j = 0; j < columns; j++)
+            if (i + j != (rows + columns - 2) && document.getElementById(i + " " + j).innerHTML != i * columns + j + 1) {
+                isWin = false;
+                break;
             }
-        }, timeout * 10);
-
-
+    if (isWin) {
+        setTimeout(showCongratsMessage, timeout * 10 + 1);     // если клетки на своих местах, выводим сообщение о победе
     }
 }
 
